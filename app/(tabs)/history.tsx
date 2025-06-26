@@ -2,11 +2,11 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { COLORS, SPACING } from '../../src/utils/theme';
 
-export default function HomePage() {
+export default function HistoryPage() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>MuscuApp</Text>
-      <Text style={styles.subtitle}>Pour les gros et les petits torses ! 💪</Text>
+      <Text style={styles.title}>Historique</Text>
+      <Text style={styles.subtitle}>Consultez vos séances passées</Text>
     </View>
   );
 }
@@ -20,13 +20,13 @@ const styles = StyleSheet.create({
     padding: SPACING.lg,
   },
   title: {
-    fontSize: 32,
+    fontSize: 24,
     fontWeight: 'bold',
     color: COLORS.text,
     marginBottom: SPACING.md,
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: 16,
     color: COLORS.textSecondary,
   },
 });
