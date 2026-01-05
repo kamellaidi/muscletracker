@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, StyleSheet } from 'react-native';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { COLORS, SPACING } from '../utils/theme';
 
 interface InputProps {
@@ -8,9 +8,10 @@ interface InputProps {
   onChangeText: (text: string) => void;
   placeholder?: string;
   style?: any;
+  keyboardType?: 'default' | 'numeric'; // Nouveau
 }
 
-export default function Input({ label, value, onChangeText, placeholder, style }: InputProps) {
+export default function Input({ label, value, onChangeText, placeholder, style, keyboardType }: InputProps) {
   return (
     <View style={[styles.container, style]}>
       <Text style={styles.label}>{label}</Text>
@@ -20,6 +21,7 @@ export default function Input({ label, value, onChangeText, placeholder, style }
         onChangeText={onChangeText}
         placeholder={placeholder}
         placeholderTextColor={COLORS.textSecondary}
+        keyboardType={keyboardType}
       />
     </View>
   );
