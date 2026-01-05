@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { COLORS, SPACING, TYPOGRAPHY, SHADOWS, RADIUS } from '../../src/utils/theme';
+import { ModernHeader } from '../../src/components/shared/ModernHeader';
 import { EXERCISES_DATABASE, Exercise, getExercisesByGroup } from '../../src/data/exercisesDatabase';
 import { ExerciseCard } from '../../src/components/library/ExerciseCard';
 import { ExerciseDetailModal } from '../../src/components/library/ExerciseDetailModal';
@@ -76,18 +77,15 @@ export default function ExercisesPage() {
   );
 
   /**
-   * Rendu du header (sticky)
+   * Rendu du header (sticky) - Recherche et filtres
    */
   const renderHeader = () => (
     <View style={styles.headerContainer}>
-      {/* Titre et compteur */}
-      <View style={styles.titleContainer}>
-        <Text style={styles.title}>Bibliothèque</Text>
-        <Text style={styles.subtitle}>
-          {filteredExercises.length} exercice{filteredExercises.length > 1 ? 's' : ''}
-          {selectedGroupId || searchQuery ? ' trouvé' + (filteredExercises.length > 1 ? 's' : '') : ''}
-        </Text>
-      </View>
+      {/* Compteur */}
+      <Text style={styles.counter}>
+        {filteredExercises.length} exercice{filteredExercises.length > 1 ? 's' : ''}
+        {selectedGroupId || searchQuery ? ' trouvé' + (filteredExercises.length > 1 ? 's' : '') : ''}
+      </Text>
 
       {/* Barre de recherche */}
       <SearchBar
@@ -119,6 +117,8 @@ export default function ExercisesPage() {
 
   return (
     <View style={styles.container}>
+      <ModernHeader title="Bibliothèque" subtitle="140+ exercices à découvrir" icon="📚" />
+
       <FlatList
         data={filteredExercises}
         renderItem={renderExercise}
@@ -151,20 +151,11 @@ const styles = StyleSheet.create({
   headerContainer: {
     marginBottom: SPACING.lg,
   },
-  titleContainer: {
-    marginBottom: SPACING.lg,
-  },
-  title: {
-    fontSize: TYPOGRAPHY.sizes.xxxl,
-    fontWeight: TYPOGRAPHY.weights.extrabold,
-    color: COLORS.text,
-    marginBottom: SPACING.xs,
-    lineHeight: TYPOGRAPHY.sizes.xxxl * TYPOGRAPHY.lineHeights.tight,
-  },
-  subtitle: {
-    fontSize: TYPOGRAPHY.sizes.base,
+  counter: {
+    fontSize: TYPOGRAPHY.sizes.sm,
     color: COLORS.textSecondary,
     fontWeight: TYPOGRAPHY.weights.medium,
+    marginBottom: SPACING.md,
   },
   emptyState: {
     alignItems: 'center',

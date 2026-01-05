@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { MUSCLE_GROUPS, ExerciseCategory } from '../../data/exercisesDatabase';
-import { SPACING } from '../../utils/theme';
+import { SPACING, RADIUS, SHADOWS, TYPOGRAPHY, COLORS } from '../../utils/theme';
 
 interface MuscleGroupBadgesProps {
   onSelectGroup: (groupId: string) => void;
@@ -12,6 +12,12 @@ interface MuscleGroupBadgesProps {
  *
  * Niveau 1 de la navigation : affiche une grille de badges colorés
  * pour chaque groupe musculaire
+ *
+ * Design moderne 2026 :
+ * - Badges très arrondis (borderRadius 20)
+ * - Ombres prononcées pour effet "incrusté"
+ * - Icônes grandes et centrées
+ * - Animation au toucher
  */
 export const MuscleGroupBadges: React.FC<MuscleGroupBadgesProps> = ({ onSelectGroup }) => {
   return (
@@ -41,7 +47,7 @@ const MuscleGroupBadge: React.FC<{
     <TouchableOpacity
       style={[styles.badge, { backgroundColor: group.color }]}
       onPress={onPress}
-      activeOpacity={0.8}
+      activeOpacity={0.85}
     >
       <Text style={styles.badgeIcon}>{group.icon}</Text>
       <Text style={styles.badgeName}>{group.name}</Text>
@@ -54,11 +60,13 @@ const styles = StyleSheet.create({
     padding: SPACING.md,
   },
   title: {
-    fontSize: 18,
-    fontWeight: '600',
-    color: '#2D3436',
+    fontSize: TYPOGRAPHY.sizes.lg,
+    fontWeight: TYPOGRAPHY.weights.semibold,
+    color: COLORS.textSecondary,
     marginBottom: SPACING.lg,
     textAlign: 'center',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
   grid: {
     flexDirection: 'row',
@@ -69,27 +77,23 @@ const styles = StyleSheet.create({
   badge: {
     width: '48%',
     aspectRatio: 1.5,
-    borderRadius: 12,
-    padding: SPACING.md,
+    borderRadius: RADIUS.xxl, // Très arrondi (24px)
+    padding: SPACING.lg,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.15,
-    shadowRadius: 4,
-    elevation: 3,
+    ...SHADOWS.lg, // Ombre prononcée
   },
   badgeIcon: {
-    fontSize: 40,
-    marginBottom: SPACING.xs,
+    fontSize: 48, // Icône plus grande
+    marginBottom: SPACING.sm,
   },
   badgeName: {
-    fontSize: 16,
-    fontWeight: '700',
+    fontSize: TYPOGRAPHY.sizes.base,
+    fontWeight: TYPOGRAPHY.weights.extrabold,
     color: '#FFF',
     textAlign: 'center',
-    textShadowColor: 'rgba(0, 0, 0, 0.2)',
+    textShadowColor: 'rgba(0, 0, 0, 0.3)',
     textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 2,
+    textShadowRadius: 3,
   },
 });

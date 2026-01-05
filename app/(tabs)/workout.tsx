@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet } from 'react-native';
 import Button from '../../src/components/Button';
+import { ModernHeader } from '../../src/components/shared/ModernHeader';
 import { DateSelector } from '../../src/components/workout/DateSelector';
 import { WorkoutFormModal } from '../../src/components/workout/WorkoutFormModal';
 import { WorkoutList } from '../../src/components/workout/WorkoutList';
@@ -64,9 +65,12 @@ export default function WorkoutPage() {
   }, [loadData]);
 
   return (
-    <ScrollView style={styles.container}>
-      {/* Sélecteur de date */}
-      <DateSelector
+    <View style={styles.container}>
+      <ModernHeader title="Ma Séance" subtitle="Enregistrez vos exercices" icon="🏋️" />
+
+      <ScrollView style={styles.scrollView}>
+        {/* Sélecteur de date */}
+        <DateSelector
         selectedDay={dateNavigation.selectedDay}
         selectedMonth={dateNavigation.selectedMonth}
         selectedYear={dateNavigation.selectedYear}
@@ -92,6 +96,7 @@ export default function WorkoutPage() {
 
       {/* Liste des exercices */}
       <WorkoutList workouts={todayWorkouts} />
+      </ScrollView>
 
       {/* Modal d'ajout d'exercice avec navigation à 3 niveaux */}
       <WorkoutFormModal
@@ -110,7 +115,7 @@ export default function WorkoutPage() {
         onUseWeightChange={workoutForm.setUseWeight}
         onSubmit={workoutForm.handleSubmit}
       />
-    </ScrollView>
+    </View>
   );
 }
 
@@ -118,6 +123,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
+  },
+  scrollView: {
+    flex: 1,
   },
   addButton: {
     marginHorizontal: 16,
