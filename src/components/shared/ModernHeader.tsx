@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { COLORS, SPACING, TYPOGRAPHY, RADIUS } from '../../utils/theme';
+import { SPACING, TYPOGRAPHY, RADIUS } from '../../utils/theme';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface ModernHeaderProps {
   title: string;
@@ -26,13 +27,18 @@ export const ModernHeader: React.FC<ModernHeaderProps> = ({
   icon,
   gradient = false,
 }) => {
+  const { colors } = useTheme();
+
   return (
-    <View style={[styles.container, gradient && styles.gradientBg]}>
+    <View style={[
+      styles.container,
+      { backgroundColor: gradient ? colors.primary : colors.surface }
+    ]}>
       <View style={styles.content}>
         {icon && <Text style={styles.icon}>{icon}</Text>}
         <View style={styles.textContainer}>
-          <Text style={styles.title}>{title}</Text>
-          {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
+          <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
+          {subtitle && <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{subtitle}</Text>}
         </View>
       </View>
     </View>
@@ -41,7 +47,6 @@ export const ModernHeader: React.FC<ModernHeaderProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: COLORS.surface,
     paddingTop: SPACING.xl,
     paddingBottom: SPACING.lg,
     paddingHorizontal: SPACING.lg,
@@ -52,9 +57,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 4,
-  },
-  gradientBg: {
-    backgroundColor: COLORS.primary,
   },
   content: {
     flexDirection: 'row',
@@ -70,12 +72,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: TYPOGRAPHY.sizes.xxl,
     fontWeight: TYPOGRAPHY.weights.extrabold,
-    color: COLORS.text,
     lineHeight: TYPOGRAPHY.sizes.xxl * TYPOGRAPHY.lineHeights.tight,
   },
   subtitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.textSecondary,
     marginTop: SPACING.xxs,
     fontWeight: TYPOGRAPHY.weights.medium,
   },

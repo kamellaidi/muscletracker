@@ -870,6 +870,11 @@ export const getMuscleGroupById = (groupId: string): ExerciseCategory | undefine
   return MUSCLE_GROUPS.find(g => g.id === groupId);
 };
 
+// Fonction helper pour obtenir un exercice par ID
+export const getExerciseById = (exerciseId: string): Exercise | undefined => {
+  return EXERCISES_DATABASE.find(ex => ex.id === exerciseId);
+};
+
 // Statistiques
 export const DATABASE_STATS = {
   totalExercises: EXERCISES_DATABASE.length,

@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { MUSCLE_GROUPS } from '../../data/exercisesDatabase';
-import { COLORS, SPACING, RADIUS, TYPOGRAPHY, SHADOWS } from '../../utils/theme';
+import { SPACING, RADIUS, TYPOGRAPHY, SHADOWS } from '../../utils/theme';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface FilterChipsProps {
   selectedGroupId: string | null;
@@ -20,6 +21,8 @@ export const FilterChips: React.FC<FilterChipsProps> = ({
   selectedGroupId,
   onSelectGroup,
 }) => {
+  const { colors } = useTheme();
+
   return (
     <ScrollView
       horizontal
@@ -31,7 +34,7 @@ export const FilterChips: React.FC<FilterChipsProps> = ({
         id={null}
         label="Tous"
         icon="📚"
-        color={COLORS.textSecondary}
+        color={colors.textSecondary}
         selected={selectedGroupId === null}
         onPress={() => onSelectGroup(null)}
       />
@@ -63,10 +66,13 @@ const FilterChip: React.FC<{
   selected: boolean;
   onPress: () => void;
 }> = ({ label, icon, color, selected, onPress }) => {
+  const { colors } = useTheme();
+
   return (
     <TouchableOpacity
       style={[
         styles.chip,
+        { backgroundColor: colors.surface, borderColor: colors.border },
         selected && styles.chipSelected,
         selected && { backgroundColor: color },
       ]}
@@ -74,7 +80,7 @@ const FilterChip: React.FC<{
       activeOpacity={0.7}
     >
       <Text style={styles.chipIcon}>{icon}</Text>
-      <Text style={[styles.chipLabel, selected && styles.chipLabelSelected]}>
+      <Text style={[styles.chipLabel, { color: colors.text }, selected && { color: colors.textInverse }]}>
         {label}
       </Text>
     </TouchableOpacity>
@@ -92,9 +98,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.sm,
     borderRadius: RADIUS.full,
-    backgroundColor: COLORS.surface,
     borderWidth: 1,
-    borderColor: COLORS.border,
     marginRight: SPACING.sm,
     ...SHADOWS.sm,
   },
@@ -109,9 +113,5 @@ const styles = StyleSheet.create({
   chipLabel: {
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: TYPOGRAPHY.weights.semibold,
-    color: COLORS.text,
-  },
-  chipLabelSelected: {
-    color: COLORS.textInverse,
   },
 });

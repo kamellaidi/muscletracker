@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { MUSCLE_GROUPS, ExerciseCategory } from '../../data/exercisesDatabase';
-import { SPACING, RADIUS, SHADOWS, TYPOGRAPHY, COLORS } from '../../utils/theme';
+import { SPACING, RADIUS, SHADOWS, TYPOGRAPHY } from '../../utils/theme';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface MuscleGroupBadgesProps {
   onSelectGroup: (groupId: string) => void;
@@ -20,9 +21,11 @@ interface MuscleGroupBadgesProps {
  * - Animation au toucher
  */
 export const MuscleGroupBadges: React.FC<MuscleGroupBadgesProps> = ({ onSelectGroup }) => {
+  const { colors } = useTheme();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Choisir un groupe musculaire</Text>
+      <Text style={[styles.title, { color: colors.textSecondary }]}>Choisir un groupe musculaire</Text>
       <View style={styles.grid}>
         {MUSCLE_GROUPS.map((group) => (
           <MuscleGroupBadge
@@ -62,7 +65,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: TYPOGRAPHY.weights.semibold,
-    color: COLORS.textSecondary,
     marginBottom: SPACING.lg,
     textAlign: 'center',
     textTransform: 'uppercase',

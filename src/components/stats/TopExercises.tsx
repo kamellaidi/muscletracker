@@ -1,6 +1,7 @@
 import React from 'react';
+import { useTheme } from '../../contexts/ThemeContext';
 import { View, Text, StyleSheet } from 'react-native';
-import { COLORS, SPACING, RADIUS, SHADOWS, TYPOGRAPHY } from '../../utils/theme';
+import { SPACING, RADIUS, SHADOWS, TYPOGRAPHY } from '../../utils/theme';
 
 interface ExerciseStat {
   name: string;
@@ -16,24 +17,26 @@ interface TopExercisesProps {
  * Composant affichant le top 5 des exercices les plus pratiqués
  */
 export const TopExercises: React.FC<TopExercisesProps> = ({ exercises }) => {
+  const { colors } = useTheme();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.sectionTitle}>Top Exercices</Text>
-      <View style={styles.card}>
+      <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>Top Exercices</Text>
+      <View style={[styles.card, { backgroundColor: colors.surface }]}>
         {exercises.slice(0, 5).map((exercise, index) => (
           <View key={exercise.name} style={styles.exerciseRow}>
-            <View style={styles.rankBadge}>
-              <Text style={styles.rankText}>{index + 1}</Text>
+            <View style={[styles.rankBadge, { backgroundColor: colors.primary }]}>
+              <Text style={[styles.rankText, { color: colors.textInverse }]}>{index + 1}</Text>
             </View>
             <View style={styles.exerciseInfo}>
-              <Text style={styles.exerciseName}>{exercise.name}</Text>
-              <View style={styles.progressBarContainer}>
+              <Text style={[styles.exerciseName, { color: colors.text }]}>{exercise.name}</Text>
+              <View style={[styles.progressBarContainer, { backgroundColor: colors.divider }]}>
                 <View
-                  style={[styles.progressBar, { width: `${exercise.percentage}%` }]}
+                  style={[styles.progressBar, { width: `${exercise.percentage}%`, backgroundColor: colors.primary }]}
                 />
               </View>
             </View>
-            <Text style={styles.exerciseCount}>{exercise.count}×</Text>
+            <Text style={[styles.exerciseCount, { color: colors.textSecondary }]}>{exercise.count}×</Text>
           </View>
         ))}
       </View>
@@ -48,13 +51,11 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.base,
     fontWeight: TYPOGRAPHY.weights.semibold,
-    color: COLORS.textSecondary,
     marginBottom: SPACING.md,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   card: {
-    backgroundColor: COLORS.surface,
     borderRadius: RADIUS.xl,
     padding: SPACING.md,
     ...SHADOWS.sm,
@@ -68,7 +69,6 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: RADIUS.full,
-    backgroundColor: COLORS.primary,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: SPACING.sm,
@@ -76,7 +76,6 @@ const styles = StyleSheet.create({
   rankText: {
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: TYPOGRAPHY.weights.bold,
-    color: COLORS.textInverse,
   },
   exerciseInfo: {
     flex: 1,
@@ -85,23 +84,19 @@ const styles = StyleSheet.create({
   exerciseName: {
     fontSize: TYPOGRAPHY.sizes.base,
     fontWeight: TYPOGRAPHY.weights.semibold,
-    color: COLORS.text,
     marginBottom: SPACING.xxs,
   },
   progressBarContainer: {
     height: 6,
-    backgroundColor: COLORS.divider,
     borderRadius: RADIUS.full,
     overflow: 'hidden',
   },
   progressBar: {
     height: '100%',
-    backgroundColor: COLORS.primary,
     borderRadius: RADIUS.full,
   },
   exerciseCount: {
     fontSize: TYPOGRAPHY.sizes.base,
     fontWeight: TYPOGRAPHY.weights.bold,
-    color: COLORS.textSecondary,
   },
 });

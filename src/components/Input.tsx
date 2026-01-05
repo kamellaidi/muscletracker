@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
-import { COLORS, SPACING } from '../utils/theme';
+import { SPACING } from '../utils/theme';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface InputProps {
   label: string;
@@ -12,15 +13,17 @@ interface InputProps {
 }
 
 export default function Input({ label, value, onChangeText, placeholder, style, keyboardType }: InputProps) {
+  const { colors } = useTheme();
+
   return (
     <View style={[styles.container, style]}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={[styles.label, { color: colors.text }]}>{label}</Text>
       <TextInput
-        style={styles.input}
+        style={[styles.input, { borderColor: colors.border, backgroundColor: colors.surface, color: colors.text }]}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor={COLORS.textSecondary}
+        placeholderTextColor={colors.textSecondary}
         keyboardType={keyboardType}
       />
     </View>
@@ -34,17 +37,13 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: '500',
-    color: COLORS.text,
     marginBottom: SPACING.xs,
   },
   input: {
     borderWidth: 1,
-    borderColor: COLORS.border,
     borderRadius: 8,
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.sm,
     fontSize: 16,
-    backgroundColor: COLORS.surface,
-    color: COLORS.text,
   },
 });

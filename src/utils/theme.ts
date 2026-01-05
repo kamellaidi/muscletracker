@@ -5,10 +5,13 @@
  * - Couleurs vives et énergiques pour la motivation
  * - Dégradés subtils pour la profondeur
  * - Contraste élevé pour la lisibilité
- * - Mode sombre ready (fondations)
+ * - Support complet du mode sombre
  */
 
-export const COLORS = {
+export type ColorScheme = 'light' | 'dark';
+
+// Palette de couleurs Light
+export const LIGHT_COLORS = {
   // Couleurs principales - Palette énergique
   primary: '#6366F1',        // Indigo vif - CTA et éléments interactifs
   primaryDark: '#4F46E5',    // Indigo foncé - Hover states
@@ -48,6 +51,62 @@ export const COLORS = {
   gradientPrimary: ['#6366F1', '#8B5CF6'], // Indigo vers Purple
   gradientSecondary: ['#EC4899', '#F43F5E'], // Pink vers Rose
   gradientSuccess: ['#10B981', '#059669'], // Green
+};
+
+// Palette de couleurs Dark
+export const DARK_COLORS = {
+  // Couleurs principales - Palette énergique (légèrement plus vives en dark mode)
+  primary: '#818CF8',        // Indigo plus clair
+  primaryDark: '#6366F1',    // Indigo standard
+  primaryLight: '#A5B4FC',   // Indigo très clair
+
+  // Couleurs secondaires
+  secondary: '#F472B6',      // Rose plus clair
+  success: '#34D399',        // Vert plus clair
+  warning: '#FBBF24',        // Ambre plus clair
+  error: '#F87171',          // Rouge plus clair
+  info: '#60A5FA',           // Bleu plus clair
+
+  // Backgrounds
+  background: '#0F172A',     // Slate 900 - Fond principal sombre
+  surface: '#1E293B',        // Slate 800 - Cartes et surfaces
+  surfaceElevated: '#334155',// Slate 700 - Surfaces surélevées
+
+  // Texte
+  text: '#F8FAFC',           // Slate 50 - Texte principal
+  textSecondary: '#94A3B8',  // Slate 400 - Texte secondaire
+  textTertiary: '#64748B',   // Slate 500 - Texte tertiaire
+  textInverse: '#0F172A',    // Slate 900 - Texte sur fond clair
+
+  // Borders et dividers
+  border: '#334155',         // Slate 700 - Bordures
+  divider: '#1E293B',        // Slate 800 - Séparateurs
+
+  // Overlays
+  overlay: 'rgba(0, 0, 0, 0.7)',  // Overlay très sombre
+  overlayLight: 'rgba(30, 41, 59, 0.9)', // Overlay dark mode
+
+  // États
+  disabled: '#475569',       // Slate 600 - Éléments désactivés
+  placeholder: '#64748B',    // Slate 500 - Placeholders
+
+  // Dégradés
+  gradientPrimary: ['#818CF8', '#A78BFA'], // Indigo vers Purple (plus clair)
+  gradientSecondary: ['#F472B6', '#FB7185'], // Pink vers Rose (plus clair)
+  gradientSuccess: ['#34D399', '#10B981'], // Green
+};
+
+// Couleurs actuelles (par défaut en mode clair)
+export let COLORS = LIGHT_COLORS;
+
+// Fonction pour changer le thème
+export const setColorScheme = (scheme: ColorScheme) => {
+  COLORS = scheme === 'dark' ? DARK_COLORS : LIGHT_COLORS;
+};
+
+// Fonction pour obtenir les couleurs selon le schéma
+export const getColors = (scheme: ColorScheme) => {
+  return scheme === 'dark' ? DARK_COLORS : LIGHT_COLORS;
 };
 
 export const SPACING = {

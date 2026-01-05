@@ -1,7 +1,8 @@
 import React, { useMemo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { WorkoutEntry } from '../../types';
-import { COLORS, SPACING } from '../../utils/theme';
+import { SPACING } from '../../utils/theme';
+import { useTheme } from '../../contexts/ThemeContext';
 import { WORKOUT_MESSAGES } from '../../constants/messages';
 
 interface WorkoutSummaryProps {
@@ -14,6 +15,8 @@ interface WorkoutSummaryProps {
  * Calcule et affiche le nombre total d'exercices, de séries et de répétitions
  */
 export const WorkoutSummary: React.FC<WorkoutSummaryProps> = ({ workouts }) => {
+  const { colors } = useTheme();
+
   /**
    * Calcule les statistiques de la séance de manière mémorisée
    * pour éviter les recalculs inutiles
@@ -35,20 +38,20 @@ export const WorkoutSummary: React.FC<WorkoutSummaryProps> = ({ workouts }) => {
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>{WORKOUT_MESSAGES.LABELS.SUMMARY_TITLE}</Text>
+    <View style={[styles.container, { backgroundColor: colors.surface, borderColor: colors.border }]}>
+      <Text style={[styles.title, { color: colors.text }]}>{WORKOUT_MESSAGES.LABELS.SUMMARY_TITLE}</Text>
       <View style={styles.row}>
         <View style={styles.item}>
-          <Text style={styles.number}>{stats.exerciseCount}</Text>
-          <Text style={styles.label}>{WORKOUT_MESSAGES.SUMMARY.EXERCISES}</Text>
+          <Text style={[styles.number, { color: colors.primary }]}>{stats.exerciseCount}</Text>
+          <Text style={[styles.label, { color: colors.textSecondary }]}>{WORKOUT_MESSAGES.SUMMARY.EXERCISES}</Text>
         </View>
         <View style={styles.item}>
-          <Text style={styles.number}>{stats.totalSets}</Text>
-          <Text style={styles.label}>{WORKOUT_MESSAGES.SUMMARY.SETS}</Text>
+          <Text style={[styles.number, { color: colors.primary }]}>{stats.totalSets}</Text>
+          <Text style={[styles.label, { color: colors.textSecondary }]}>{WORKOUT_MESSAGES.SUMMARY.SETS}</Text>
         </View>
         <View style={styles.item}>
-          <Text style={styles.number}>{stats.totalReps}</Text>
-          <Text style={styles.label}>{WORKOUT_MESSAGES.SUMMARY.REPS}</Text>
+          <Text style={[styles.number, { color: colors.primary }]}>{stats.totalReps}</Text>
+          <Text style={[styles.label, { color: colors.textSecondary }]}>{WORKOUT_MESSAGES.SUMMARY.REPS}</Text>
         </View>
       </View>
     </View>
@@ -57,12 +60,10 @@ export const WorkoutSummary: React.FC<WorkoutSummaryProps> = ({ workouts }) => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: COLORS.surface,
     margin: SPACING.md,
     padding: SPACING.md,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: COLORS.border,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -72,7 +73,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: '600',
-    color: COLORS.text,
     marginBottom: SPACING.md,
     textAlign: 'center',
   },
@@ -86,11 +86,9 @@ const styles = StyleSheet.create({
   number: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: COLORS.primary,
   },
   label: {
     fontSize: 12,
-    color: COLORS.textSecondary,
     marginTop: SPACING.xs,
   },
 });

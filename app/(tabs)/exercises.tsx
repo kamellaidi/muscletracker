@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
-import { COLORS, SPACING, TYPOGRAPHY, SHADOWS, RADIUS } from '../../src/utils/theme';
+import { SPACING, TYPOGRAPHY, SHADOWS, RADIUS } from '../../src/utils/theme';
+import { useTheme } from '../../src/contexts/ThemeContext';
 import { ModernHeader } from '../../src/components/shared/ModernHeader';
 import { EXERCISES_DATABASE, Exercise, getExercisesByGroup } from '../../src/data/exercisesDatabase';
 import { ExerciseCard } from '../../src/components/library/ExerciseCard';
@@ -19,6 +20,8 @@ import { FilterChips } from '../../src/components/library/FilterChips';
  * - Design moderne et épuré
  */
 export default function ExercisesPage() {
+  const { colors } = useTheme();
+
   // État de recherche et filtres
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
@@ -82,7 +85,7 @@ export default function ExercisesPage() {
   const renderHeader = () => (
     <View style={styles.headerContainer}>
       {/* Compteur */}
-      <Text style={styles.counter}>
+      <Text style={[styles.counter, { color: colors.textSecondary }]}>
         {filteredExercises.length} exercice{filteredExercises.length > 1 ? 's' : ''}
         {selectedGroupId || searchQuery ? ' trouvé' + (filteredExercises.length > 1 ? 's' : '') : ''}
       </Text>
@@ -108,15 +111,15 @@ export default function ExercisesPage() {
   const renderEmpty = () => (
     <View style={styles.emptyState}>
       <Text style={styles.emptyIcon}>🔍</Text>
-      <Text style={styles.emptyTitle}>Aucun exercice trouvé</Text>
-      <Text style={styles.emptySubtitle}>
+      <Text style={[styles.emptyTitle, { color: colors.text }]}>Aucun exercice trouvé</Text>
+      <Text style={[styles.emptySubtitle, { color: colors.textSecondary }]}>
         Essayez de modifier votre recherche ou vos filtres
       </Text>
     </View>
   );
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ModernHeader title="Bibliothèque" subtitle="140+ exercices à découvrir" icon="📚" />
 
       <FlatList
@@ -142,7 +145,6 @@ export default function ExercisesPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   listContent: {
     padding: SPACING.md,
@@ -153,7 +155,6 @@ const styles = StyleSheet.create({
   },
   counter: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.textSecondary,
     fontWeight: TYPOGRAPHY.weights.medium,
     marginBottom: SPACING.md,
   },
@@ -171,13 +172,11 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
     fontWeight: TYPOGRAPHY.weights.bold,
-    color: COLORS.text,
     marginBottom: SPACING.sm,
     textAlign: 'center',
   },
   emptySubtitle: {
     fontSize: TYPOGRAPHY.sizes.base,
-    color: COLORS.textSecondary,
     textAlign: 'center',
     lineHeight: TYPOGRAPHY.sizes.base * TYPOGRAPHY.lineHeights.relaxed,
   },

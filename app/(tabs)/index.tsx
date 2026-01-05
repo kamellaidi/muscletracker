@@ -4,8 +4,9 @@ import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { DashboardCard } from '../../src/components/dashboard/DashboardCard';
 import { QuickStats } from '../../src/components/dashboard/QuickStats';
 import { ModernHeader } from '../../src/components/shared/ModernHeader';
+import { useTheme } from '../../src/contexts/ThemeContext';
 import StorageService from '../../src/services/StorageService';
-import { COLORS, SPACING, TYPOGRAPHY } from '../../src/utils/theme';
+import { SPACING, TYPOGRAPHY } from '../../src/utils/theme';
 
 /**
  * Page d'accueil - Dashboard principal
@@ -19,6 +20,7 @@ import { COLORS, SPACING, TYPOGRAPHY } from '../../src/utils/theme';
  */
 export default function HomePage() {
   const router = useRouter();
+  const { colors } = useTheme();
 
   // États pour les statistiques
   const [workoutsThisWeek, setWorkoutsThisWeek] = useState(0);
@@ -87,8 +89,8 @@ export default function HomePage() {
   }, [loadStats]);
 
   return (
-    <View style={styles.container}>
-      <ModernHeader title="Bonjour ! 👋" subtitle="Prêt à vous entraîner ?" />
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <ModernHeader title="Muscle Tracker" subtitle="Suivez vos performances 💪" icon="🏋️" />
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
@@ -102,13 +104,13 @@ export default function HomePage() {
 
         {/* Section Actions rapides */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Actions rapides</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>Actions rapides</Text>
 
           <DashboardCard
             icon="🏋️"
             title="Nouvelle séance"
             subtitle="Enregistrer un entraînement"
-            color={COLORS.primary}
+            color={colors.primary}
             onPress={() => router.push('/workout')}
           />
 
@@ -116,7 +118,7 @@ export default function HomePage() {
             icon="📚"
             title="Bibliothèque"
             subtitle="Explorer 140+ exercices"
-            color={COLORS.secondary}
+            color={colors.secondary}
             onPress={() => router.push('/exercises')}
           />
 
@@ -124,21 +126,21 @@ export default function HomePage() {
             icon="📊"
             title="Mon Espace"
             subtitle="Voir vos statistiques"
-            color="#10B981"
+            color={colors.success}
             onPress={() => router.push('/history')}
           />
         </View>
 
         {/* Section Motivation */}
-        <View style={styles.motivationCard}>
+        <View style={[styles.motivationCard, { backgroundColor: colors.surface, borderLeftColor: colors.success }]}>
           <Text style={styles.motivationIcon}>💪</Text>
           <View style={styles.motivationContent}>
-            <Text style={styles.motivationText}>
+            <Text style={[styles.motivationText, { color: colors.text }]}>
               {currentStreak > 0
                 ? `Incroyable ! ${currentStreak} jour${currentStreak > 1 ? 's' : ''} de série !`
                 : 'Commencez votre série dès aujourd\'hui !'}
             </Text>
-            <Text style={styles.motivationSubtext}>
+            <Text style={[styles.motivationSubtext, { color: colors.textSecondary }]}>
               {currentStreak > 0
                 ? 'Continuez comme ça 🔥'
                 : 'Chaque journey commence par un premier pas'}
@@ -154,7 +156,6 @@ export default function HomePage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   scrollView: {
     flex: 1,
@@ -169,18 +170,15 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.base,
     fontWeight: TYPOGRAPHY.weights.semibold,
-    color: COLORS.textSecondary,
     marginBottom: SPACING.md,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   motivationCard: {
     flexDirection: 'row',
-    backgroundColor: COLORS.surface,
     padding: SPACING.lg,
     borderRadius: 24,
     borderLeftWidth: 4,
-    borderLeftColor: COLORS.success,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
@@ -197,13 +195,11 @@ const styles = StyleSheet.create({
   motivationText: {
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: TYPOGRAPHY.weights.bold,
-    color: COLORS.text,
     marginBottom: SPACING.xs,
     lineHeight: TYPOGRAPHY.sizes.lg * TYPOGRAPHY.lineHeights.normal,
   },
   motivationSubtext: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.textSecondary,
     lineHeight: TYPOGRAPHY.sizes.sm * TYPOGRAPHY.lineHeights.relaxed,
   },
 });

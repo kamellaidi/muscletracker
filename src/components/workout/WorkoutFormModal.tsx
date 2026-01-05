@@ -3,7 +3,8 @@ import { View, Text, Modal, ScrollView, StyleSheet, Switch, TouchableOpacity } f
 import Button from '../Button';
 import Input from '../Input';
 import { Exercise } from '../../data/exercisesDatabase';
-import { COLORS, SPACING } from '../../utils/theme';
+import { SPACING } from '../../utils/theme';
+import { useTheme } from '../../contexts/ThemeContext';
 import { WORKOUT_MESSAGES } from '../../constants/messages';
 import { MuscleGroupBadges } from './MuscleGroupBadges';
 import { ExerciseSelectionList } from './ExerciseSelectionList';
@@ -51,6 +52,7 @@ export const WorkoutFormModal: React.FC<WorkoutFormModalProps> = ({
   onUseWeightChange,
   onSubmit,
 }) => {
+  const { colors } = useTheme();
   // État de navigation
   const [currentLevel, setCurrentLevel] = useState<NavigationLevel>('category');
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
@@ -94,12 +96,12 @@ export const WorkoutFormModal: React.FC<WorkoutFormModalProps> = ({
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="formSheet">
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
         {/* En-tête du modal */}
-        <View style={styles.header}>
-          <Text style={styles.title}>{WORKOUT_MESSAGES.LABELS.MODAL_TITLE}</Text>
+        <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
+          <Text style={[styles.title, { color: colors.text }]}>{WORKOUT_MESSAGES.LABELS.MODAL_TITLE}</Text>
           <TouchableOpacity style={styles.closeButton} onPress={handleClose}>
-            <Text style={styles.closeIcon}>✕</Text>
+            <Text style={[styles.closeIcon, { color: colors.textSecondary }]}>✕</Text>
           </TouchableOpacity>
         </View>
 
@@ -123,12 +125,12 @@ export const WorkoutFormModal: React.FC<WorkoutFormModalProps> = ({
             <View style={styles.formContainer}>
               {/* Bouton retour */}
               <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-                <Text style={styles.backIcon}>←</Text>
-                <Text style={styles.backText}>Retour</Text>
+                <Text style={[styles.backIcon, { color: colors.primary }]}>←</Text>
+                <Text style={[styles.backText, { color: colors.primary }]}>Retour</Text>
               </TouchableOpacity>
 
               {/* Exercice sélectionné */}
-              <Text style={styles.selectedExercise}>
+              <Text style={[styles.selectedExercise, { color: colors.primary, backgroundColor: colors.surface }]}>
                 {WORKOUT_MESSAGES.LABELS.EXERCISE_SELECTED} {selectedExercise.name}
               </Text>
 
@@ -154,14 +156,14 @@ export const WorkoutFormModal: React.FC<WorkoutFormModalProps> = ({
               </View>
 
               {/* Switch pour activer/désactiver le poids */}
-              <View style={styles.weightToggle}>
-                <Text style={styles.weightToggleLabel}>
+              <View style={[styles.weightToggle, { backgroundColor: colors.surface }]}>
+                <Text style={[styles.weightToggleLabel, { color: colors.text }]}>
                   {WORKOUT_MESSAGES.LABELS.WITH_WEIGHT}
                 </Text>
                 <Switch
                   value={useWeight}
                   onValueChange={onUseWeightChange}
-                  trackColor={{ false: COLORS.border, true: COLORS.primary }}
+                  trackColor={{ false: colors.border, true: colors.primary }}
                   thumbColor={useWeight ? '#fff' : '#f4f3f4'}
                 />
               </View>
@@ -195,7 +197,6 @@ export const WorkoutFormModal: React.FC<WorkoutFormModalProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   header: {
     flexDirection: 'row',
@@ -203,20 +204,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: SPACING.md,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
-    backgroundColor: COLORS.surface,
   },
   title: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: COLORS.text,
   },
   closeButton: {
     padding: SPACING.xs,
   },
   closeIcon: {
     fontSize: 24,
-    color: COLORS.textSecondary,
     fontWeight: 'bold',
   },
   content: {
@@ -232,21 +229,17 @@ const styles = StyleSheet.create({
   },
   backIcon: {
     fontSize: 24,
-    color: COLORS.primary,
     marginRight: SPACING.xs,
   },
   backText: {
     fontSize: 16,
-    color: COLORS.primary,
     fontWeight: '600',
   },
   selectedExercise: {
     fontSize: 16,
     fontWeight: '600',
-    color: COLORS.primary,
     marginBottom: SPACING.lg,
     textAlign: 'center',
-    backgroundColor: COLORS.surface,
     padding: SPACING.md,
     borderRadius: 8,
   },
@@ -264,14 +257,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: SPACING.md,
     paddingHorizontal: SPACING.sm,
-    backgroundColor: COLORS.surface,
     borderRadius: 8,
     marginBottom: SPACING.md,
   },
   weightToggleLabel: {
     fontSize: 16,
     fontWeight: '500',
-    color: COLORS.text,
   },
   submitButton: {
     marginTop: SPACING.lg,

@@ -1,13 +1,15 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, RefreshControl } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { COLORS, SPACING, TYPOGRAPHY } from '../../src/utils/theme';
+import React, { useCallback, useEffect, useState } from 'react';
+import { RefreshControl, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ThemeToggle } from '../../src/components/settings/ThemeToggle';
 import { ModernHeader } from '../../src/components/shared/ModernHeader';
+import { MuscleGroupDistribution } from '../../src/components/stats/MuscleGroupDistribution';
 import { StatCard } from '../../src/components/stats/StatCard';
 import { TopExercises } from '../../src/components/stats/TopExercises';
-import { MuscleGroupDistribution } from '../../src/components/stats/MuscleGroupDistribution';
-import { WorkoutEntry } from '../../src/types';
+import { useTheme } from '../../src/contexts/ThemeContext';
 import { getExerciseById } from '../../src/data/exercisesDatabase';
+import { WorkoutEntry } from '../../src/types';
+import { SPACING, TYPOGRAPHY } from '../../src/utils/theme';
 
 interface ExerciseStat {
   name: string;
@@ -22,6 +24,7 @@ interface MuscleGroupStat {
 }
 
 export default function MonEspacePage() {
+  const { colors } = useTheme();
   const [refreshing, setRefreshing] = useState(false);
   const [stats, setStats] = useState({
     totalWorkouts: 0,
@@ -216,7 +219,7 @@ export default function MonEspacePage() {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ModernHeader title="Mon Espace" subtitle="Vos statistiques d'entraînement" icon="📊" />
 
       <ScrollView
@@ -227,49 +230,57 @@ export default function MonEspacePage() {
         }
       >
         {stats.totalWorkouts === 0 ? (
-          <View style={styles.emptyState}>
-            <Text style={styles.emptyIcon}>💪</Text>
-            <Text style={styles.emptyTitle}>Commencez votre parcours !</Text>
-            <Text style={styles.emptyText}>
-              Vos statistiques apparaîtront ici après votre première séance
-            </Text>
-          </View>
+          <>
+            <View style={styles.emptyState}>
+              <Text style={styles.emptyIcon}>💪</Text>
+              <Text style={[styles.emptyTitle, { color: colors.text }]}>Commencez votre parcours !</Text>
+              <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
+                Vos statistiques apparaîtront ici après votre première séance
+              </Text>
+            </View>
+
+            {/* Section: Réglages (toujours visible) */}
+            <View style={styles.section}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>Réglages</Text>
+              <ThemeToggle />
+            </View>
+          </>
         ) : (
           <>
             {/* Section: Statistiques générales */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Vue d'ensemble</Text>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>Vue d&apos;ensemble</Text>
               <StatCard
                 icon="🏋️"
                 value={stats.totalWorkouts}
                 label="Séances réalisées"
                 trend={getWorkoutTrend()}
-                color={COLORS.primary}
+                color={colors.primary}
               />
               <StatCard
                 icon="💪"
                 value={stats.totalExercises}
                 label="Exercices différents"
-                color={COLORS.secondary}
+                color={colors.secondary}
               />
               <StatCard
                 icon="⚡"
                 value={`${Math.round(stats.totalVolume)}kg`}
                 label="Volume total soulevé"
-                color={COLORS.success}
+                color={colors.success}
               />
               <StatCard
                 icon="🔥"
                 value={stats.currentStreak}
                 label="Série actuelle (jours)"
-                color={COLORS.warning}
+                color={colors.warning}
               />
               {stats.bestStreak > 0 && (
                 <StatCard
                   icon="🏆"
                   value={stats.bestStreak}
                   label="Meilleure série (jours)"
-                  color={COLORS.info}
+                  color={colors.info}
                 />
               )}
             </View>
@@ -286,14 +297,14 @@ export default function MonEspacePage() {
 
             {/* Section: Insights */}
             <View style={styles.section}>
-              <Text style={styles.sectionTitle}>Insights</Text>
-              <View style={styles.insightCard}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>Insights</Text>
+              <View style={[styles.insightCard, { backgroundColor: colors.surface, borderLeftColor: colors.primary }]}>
                 <Text style={styles.insightIcon}>📈</Text>
                 <View style={styles.insightContent}>
-                  <Text style={styles.insightTitle}>Fréquence d'entraînement</Text>
-                  <Text style={styles.insightText}>
+                  <Text style={[styles.insightTitle, { color: colors.text }]}>Fréquence d&apos;entraînement</Text>
+                  <Text style={[styles.insightText, { color: colors.textSecondary }]}>
                     Vous vous entraînez en moyenne{' '}
-                    <Text style={styles.insightBold}>
+                    <Text style={[styles.insightBold, { color: colors.primary }]}>
                       {stats.avgWorkoutsPerWeek} fois par semaine
                     </Text>{' '}
                     ces 3 derniers mois.
@@ -301,18 +312,24 @@ export default function MonEspacePage() {
                 </View>
               </View>
               {stats.currentStreak >= 7 && (
-                <View style={styles.insightCard}>
+                <View style={[styles.insightCard, { backgroundColor: colors.surface, borderLeftColor: colors.primary }]}>
                   <Text style={styles.insightIcon}>🔥</Text>
                   <View style={styles.insightContent}>
-                    <Text style={styles.insightTitle}>Excellente régularité !</Text>
-                    <Text style={styles.insightText}>
+                    <Text style={[styles.insightTitle, { color: colors.text }]}>Excellente régularité !</Text>
+                    <Text style={[styles.insightText, { color: colors.textSecondary }]}>
                       Vous maintenez une série de{' '}
-                      <Text style={styles.insightBold}>{stats.currentStreak} jours</Text>.
+                      <Text style={[styles.insightBold, { color: colors.primary }]}>{stats.currentStreak} jours</Text>.
                       Continuez comme ça !
                     </Text>
                   </View>
                 </View>
               )}
+            </View>
+
+            {/* Section: Réglages */}
+            <View style={styles.section}>
+              <Text style={[styles.sectionTitle, { color: colors.text }]}>Réglages</Text>
+              <ThemeToggle />
             </View>
           </>
         )}
@@ -324,7 +341,6 @@ export default function MonEspacePage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   scrollView: {
     flex: 1,
@@ -339,7 +355,6 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: TYPOGRAPHY.weights.bold,
-    color: COLORS.text,
     marginBottom: SPACING.md,
   },
   emptyState: {
@@ -355,23 +370,19 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: TYPOGRAPHY.sizes.xl,
     fontWeight: TYPOGRAPHY.weights.bold,
-    color: COLORS.text,
     marginBottom: SPACING.sm,
   },
   emptyText: {
     fontSize: TYPOGRAPHY.sizes.base,
-    color: COLORS.textSecondary,
     textAlign: 'center',
     paddingHorizontal: SPACING.xl,
   },
   insightCard: {
     flexDirection: 'row',
-    backgroundColor: COLORS.surface,
     borderRadius: 16,
     padding: SPACING.md,
     marginBottom: SPACING.sm,
     borderLeftWidth: 4,
-    borderLeftColor: COLORS.primary,
   },
   insightIcon: {
     fontSize: 32,
@@ -383,16 +394,13 @@ const styles = StyleSheet.create({
   insightTitle: {
     fontSize: TYPOGRAPHY.sizes.base,
     fontWeight: TYPOGRAPHY.weights.semibold,
-    color: COLORS.text,
     marginBottom: SPACING.xxs,
   },
   insightText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.textSecondary,
     lineHeight: TYPOGRAPHY.sizes.sm * TYPOGRAPHY.lineHeights.relaxed,
   },
   insightBold: {
     fontWeight: TYPOGRAPHY.weights.bold,
-    color: COLORS.primary,
   },
 });

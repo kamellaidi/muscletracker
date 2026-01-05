@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { COLORS, RADIUS, SHADOWS, SPACING, TYPOGRAPHY } from '../../utils/theme';
+import { RADIUS, SHADOWS, SPACING, TYPOGRAPHY } from '../../utils/theme';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface DashboardCardProps {
   title: string;
@@ -27,6 +28,8 @@ export const DashboardCard: React.FC<DashboardCardProps> = ({
   color,
   onPress,
 }) => {
+  const { colors } = useTheme();
+
   return (
     <TouchableOpacity
       style={[styles.card, { backgroundColor: color }]}
@@ -36,12 +39,12 @@ export const DashboardCard: React.FC<DashboardCardProps> = ({
       <View style={styles.content}>
         <Text style={styles.icon}>{icon}</Text>
         <View style={styles.textContainer}>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.subtitle}>{subtitle}</Text>
+          <Text style={[styles.title, { color: colors.textInverse }]}>{title}</Text>
+          <Text style={[styles.subtitle, { color: colors.textInverse }]}>{subtitle}</Text>
         </View>
       </View>
       <View style={styles.arrowContainer}>
-        <Text style={styles.arrow}>›</Text>
+        <Text style={[styles.arrow, { color: colors.textInverse }]}>›</Text>
       </View>
     </TouchableOpacity>
   );
@@ -72,12 +75,10 @@ const styles = StyleSheet.create({
   title: {
     fontSize: TYPOGRAPHY.sizes.xl,
     fontWeight: TYPOGRAPHY.weights.bold,
-    color: COLORS.textInverse,
     marginBottom: SPACING.xxs,
   },
   subtitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.textInverse,
     opacity: 0.9,
   },
   arrowContainer: {
@@ -85,7 +86,6 @@ const styles = StyleSheet.create({
   },
   arrow: {
     fontSize: 36,
-    color: COLORS.textInverse,
     fontWeight: TYPOGRAPHY.weights.regular,
   },
 });

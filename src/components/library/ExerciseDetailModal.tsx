@@ -10,7 +10,8 @@ import {
   Alert,
 } from 'react-native';
 import { Exercise, getMuscleGroupById } from '../../data/exercisesDatabase';
-import { COLORS, SPACING, RADIUS, SHADOWS, TYPOGRAPHY } from '../../utils/theme';
+import { SPACING, RADIUS, SHADOWS, TYPOGRAPHY } from '../../utils/theme';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface ExerciseDetailModalProps {
   visible: boolean;
@@ -31,6 +32,8 @@ export const ExerciseDetailModal: React.FC<ExerciseDetailModalProps> = ({
   exercise,
   onClose,
 }) => {
+  const { colors } = useTheme();
+
   if (!exercise) return null;
 
   const group = getMuscleGroupById(getGroupId(exercise.group));
@@ -59,11 +62,11 @@ export const ExerciseDetailModal: React.FC<ExerciseDetailModalProps> = ({
 
   return (
     <Modal visible={visible} animationType="slide" presentationStyle="pageSheet">
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
         {/* Header avec bouton fermer */}
-        <View style={styles.header}>
+        <View style={[styles.header, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-            <Text style={styles.closeIcon}>✕</Text>
+            <Text style={[styles.closeIcon, { color: colors.textSecondary }]}>✕</Text>
           </TouchableOpacity>
         </View>
 
@@ -72,12 +75,12 @@ export const ExerciseDetailModal: React.FC<ExerciseDetailModalProps> = ({
           {group && (
             <View style={[styles.groupBadge, { backgroundColor: group.color }]}>
               <Text style={styles.groupIcon}>{group.icon}</Text>
-              <Text style={styles.groupName}>{group.name}</Text>
+              <Text style={[styles.groupName, { color: colors.textInverse }]}>{group.name}</Text>
             </View>
           )}
 
           {/* Nom de l'exercice */}
-          <Text style={styles.exerciseName}>{exercise.name}</Text>
+          <Text style={[styles.exerciseName, { color: colors.text }]}>{exercise.name}</Text>
 
           {/* Informations */}
           <View style={styles.infoSection}>
@@ -92,21 +95,21 @@ export const ExerciseDetailModal: React.FC<ExerciseDetailModalProps> = ({
 
           {/* Bouton En savoir plus */}
           {exercise.infoUrl && (
-            <TouchableOpacity style={styles.learnMoreButton} onPress={handleOpenInfo}>
+            <TouchableOpacity style={[styles.learnMoreButton, { backgroundColor: colors.primary }]} onPress={handleOpenInfo}>
               <Text style={styles.learnMoreIcon}>📚</Text>
               <View style={styles.learnMoreContent}>
-                <Text style={styles.learnMoreTitle}>En savoir plus</Text>
-                <Text style={styles.learnMoreSubtitle}>
+                <Text style={[styles.learnMoreTitle, { color: colors.textInverse }]}>En savoir plus</Text>
+                <Text style={[styles.learnMoreSubtitle, { color: colors.textInverse }]}>
                   Voir l'exécution détaillée sur Docteur Fitness
                 </Text>
               </View>
-              <Text style={styles.learnMoreArrow}>›</Text>
+              <Text style={[styles.learnMoreArrow, { color: colors.textInverse }]}>›</Text>
             </TouchableOpacity>
           )}
 
           {/* Info complémentaire */}
-          <View style={styles.footerInfo}>
-            <Text style={styles.footerText}>
+          <View style={[styles.footerInfo, { backgroundColor: colors.surface, borderLeftColor: colors.info }]}>
+            <Text style={[styles.footerText, { color: colors.textSecondary }]}>
               💡 Consultez toujours un professionnel avant de commencer un nouvel exercice
             </Text>
           </View>
@@ -123,17 +126,21 @@ const InfoRow: React.FC<{ icon: string; label: string; value: string }> = ({
   icon,
   label,
   value,
-}) => (
-  <View style={styles.infoRow}>
-    <View style={styles.infoIconContainer}>
-      <Text style={styles.infoIcon}>{icon}</Text>
+}) => {
+  const { colors } = useTheme();
+
+  return (
+    <View style={[styles.infoRow, { backgroundColor: colors.surface }]}>
+      <View style={[styles.infoIconContainer, { backgroundColor: colors.background }]}>
+        <Text style={styles.infoIcon}>{icon}</Text>
+      </View>
+      <View style={styles.infoTextContainer}>
+        <Text style={[styles.infoLabel, { color: colors.textSecondary }]}>{label}</Text>
+        <Text style={[styles.infoValue, { color: colors.text }]}>{value}</Text>
+      </View>
     </View>
-    <View style={styles.infoTextContainer}>
-      <Text style={styles.infoLabel}>{label}</Text>
-      <Text style={styles.infoValue}>{value}</Text>
-    </View>
-  </View>
-);
+  );
+};
 
 /**
  * Convertit le nom du groupe en ID
@@ -174,23 +181,19 @@ const getEquipmentLabel = (equipment?: string): string | null => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
     alignItems: 'center',
     padding: SPACING.md,
-    backgroundColor: COLORS.surface,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
   },
   closeButton: {
     padding: SPACING.xs,
   },
   closeIcon: {
     fontSize: 28,
-    color: COLORS.textSecondary,
     fontWeight: TYPOGRAPHY.weights.regular,
   },
   content: {
@@ -213,12 +216,10 @@ const styles = StyleSheet.create({
   groupName: {
     fontSize: TYPOGRAPHY.sizes.base,
     fontWeight: TYPOGRAPHY.weights.semibold,
-    color: COLORS.textInverse,
   },
   exerciseName: {
     fontSize: TYPOGRAPHY.sizes.xxxl,
     fontWeight: TYPOGRAPHY.weights.bold,
-    color: COLORS.text,
     marginBottom: SPACING.xl,
     lineHeight: TYPOGRAPHY.sizes.xxxl * TYPOGRAPHY.lineHeights.tight,
   },
@@ -227,7 +228,6 @@ const styles = StyleSheet.create({
   },
   infoRow: {
     flexDirection: 'row',
-    backgroundColor: COLORS.surface,
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
     marginBottom: SPACING.sm,
@@ -237,7 +237,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: RADIUS.md,
-    backgroundColor: COLORS.background,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: SPACING.md,
@@ -251,19 +250,16 @@ const styles = StyleSheet.create({
   },
   infoLabel: {
     fontSize: TYPOGRAPHY.sizes.xs,
-    color: COLORS.textSecondary,
     marginBottom: SPACING.xxs,
     fontWeight: TYPOGRAPHY.weights.medium,
   },
   infoValue: {
     fontSize: TYPOGRAPHY.sizes.base,
-    color: COLORS.text,
     fontWeight: TYPOGRAPHY.weights.semibold,
   },
   learnMoreButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.primary,
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
     marginBottom: SPACING.xl,
@@ -279,29 +275,23 @@ const styles = StyleSheet.create({
   learnMoreTitle: {
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: TYPOGRAPHY.weights.bold,
-    color: COLORS.textInverse,
     marginBottom: SPACING.xxs,
   },
   learnMoreSubtitle: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.textInverse,
     opacity: 0.9,
   },
   learnMoreArrow: {
     fontSize: 32,
-    color: COLORS.textInverse,
     marginLeft: SPACING.sm,
   },
   footerInfo: {
-    backgroundColor: COLORS.surface,
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
     borderLeftWidth: 4,
-    borderLeftColor: COLORS.info,
   },
   footerText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.textSecondary,
     lineHeight: TYPOGRAPHY.sizes.sm * TYPOGRAPHY.lineHeights.relaxed,
   },
 });

@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Exercise, getMuscleGroupById } from '../../data/exercisesDatabase';
-import { COLORS, SPACING, RADIUS, SHADOWS, TYPOGRAPHY } from '../../utils/theme';
+import { SPACING, RADIUS, SHADOWS, TYPOGRAPHY } from '../../utils/theme';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface ExerciseCardProps {
   exercise: Exercise;
@@ -18,12 +19,13 @@ interface ExerciseCardProps {
  * - Ombre subtile pour la profondeur
  */
 export const ExerciseCard: React.FC<ExerciseCardProps> = ({ exercise, onPress }) => {
+  const { colors } = useTheme();
   const group = getMuscleGroupById(getGroupId(exercise.group));
   const equipmentLabel = getEquipmentLabel(exercise.equipment);
 
   return (
     <TouchableOpacity
-      style={styles.card}
+      style={[styles.card, { backgroundColor: colors.surface, borderColor: colors.border }]}
       onPress={onPress}
       activeOpacity={0.7}
     >
@@ -32,25 +34,25 @@ export const ExerciseCard: React.FC<ExerciseCardProps> = ({ exercise, onPress })
         {group && (
           <View style={[styles.groupBadge, { backgroundColor: group.color }]}>
             <Text style={styles.groupIcon}>{group.icon}</Text>
-            <Text style={styles.groupName}>{group.name}</Text>
+            <Text style={[styles.groupName, { color: colors.textInverse }]}>{group.name}</Text>
           </View>
         )}
 
         {/* Nom de l'exercice */}
-        <Text style={styles.exerciseName}>{exercise.name}</Text>
+        <Text style={[styles.exerciseName, { color: colors.text }]}>{exercise.name}</Text>
 
         {/* Équipement */}
         {equipmentLabel && (
           <View style={styles.equipmentContainer}>
             <Text style={styles.equipmentIcon}>🏋️</Text>
-            <Text style={styles.equipmentText}>{equipmentLabel}</Text>
+            <Text style={[styles.equipmentText, { color: colors.textSecondary }]}>{equipmentLabel}</Text>
           </View>
         )}
       </View>
 
       {/* Flèche pour indiquer qu'on peut cliquer */}
       <View style={styles.arrow}>
-        <Text style={styles.arrowText}>›</Text>
+        <Text style={[styles.arrowText, { color: colors.textTertiary }]}>›</Text>
       </View>
     </TouchableOpacity>
   );
@@ -95,12 +97,10 @@ const getEquipmentLabel = (equipment?: string): string | null => {
 const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
-    backgroundColor: COLORS.surface,
     borderRadius: RADIUS.lg,
     padding: SPACING.md,
     marginBottom: SPACING.sm,
     borderWidth: 1,
-    borderColor: COLORS.border,
     ...SHADOWS.sm,
   },
   content: {
@@ -122,12 +122,10 @@ const styles = StyleSheet.create({
   groupName: {
     fontSize: TYPOGRAPHY.sizes.xs,
     fontWeight: TYPOGRAPHY.weights.semibold,
-    color: COLORS.textInverse,
   },
   exerciseName: {
     fontSize: TYPOGRAPHY.sizes.lg,
     fontWeight: TYPOGRAPHY.weights.semibold,
-    color: COLORS.text,
     marginBottom: SPACING.xs,
     lineHeight: TYPOGRAPHY.sizes.lg * TYPOGRAPHY.lineHeights.tight,
   },
@@ -141,7 +139,6 @@ const styles = StyleSheet.create({
   },
   equipmentText: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.textSecondary,
   },
   arrow: {
     justifyContent: 'center',
@@ -149,7 +146,6 @@ const styles = StyleSheet.create({
   },
   arrowText: {
     fontSize: 28,
-    color: COLORS.textTertiary,
     fontWeight: TYPOGRAPHY.weights.regular,
   },
 });

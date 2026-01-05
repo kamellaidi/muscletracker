@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { COLORS, SPACING, RADIUS, SHADOWS, TYPOGRAPHY } from '../../utils/theme';
+import { SPACING, RADIUS, SHADOWS, TYPOGRAPHY } from '../../utils/theme';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface StatCardProps {
   icon: string;
@@ -27,22 +28,25 @@ export const StatCard: React.FC<StatCardProps> = ({
   value,
   label,
   trend,
-  color = COLORS.primary,
+  color,
 }) => {
+  const { colors } = useTheme();
+  const iconColor = color || colors.primary;
+
   return (
-    <View style={styles.card}>
-      <View style={[styles.iconContainer, { backgroundColor: `${color}15` }]}>
+    <View style={[styles.card, { backgroundColor: colors.surface }]}>
+      <View style={[styles.iconContainer, { backgroundColor: `${iconColor}15` }]}>
         <Text style={styles.icon}>{icon}</Text>
       </View>
       <View style={styles.content}>
-        <Text style={styles.value}>{value}</Text>
-        <Text style={styles.label}>{label}</Text>
+        <Text style={[styles.value, { color: colors.text }]}>{value}</Text>
+        <Text style={[styles.label, { color: colors.textSecondary }]}>{label}</Text>
         {trend && (
           <View style={styles.trendContainer}>
-            <Text style={[styles.trendIcon, trend.positive ? styles.trendUp : styles.trendDown]}>
+            <Text style={[styles.trendIcon, { color: trend.positive ? colors.success : colors.error }]}>
               {trend.positive ? '↗' : '↘'}
             </Text>
-            <Text style={[styles.trendText, trend.positive ? styles.trendUp : styles.trendDown]}>
+            <Text style={[styles.trendText, { color: trend.positive ? colors.success : colors.error }]}>
               {trend.value}
             </Text>
           </View>
@@ -55,7 +59,6 @@ export const StatCard: React.FC<StatCardProps> = ({
 const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
-    backgroundColor: COLORS.surface,
     borderRadius: RADIUS.xl,
     padding: SPACING.md,
     marginBottom: SPACING.sm,
@@ -79,12 +82,10 @@ const styles = StyleSheet.create({
   value: {
     fontSize: TYPOGRAPHY.sizes.xxl,
     fontWeight: TYPOGRAPHY.weights.extrabold,
-    color: COLORS.text,
     lineHeight: TYPOGRAPHY.sizes.xxl * TYPOGRAPHY.lineHeights.tight,
   },
   label: {
     fontSize: TYPOGRAPHY.sizes.sm,
-    color: COLORS.textSecondary,
     marginTop: SPACING.xxs,
     fontWeight: TYPOGRAPHY.weights.medium,
   },
@@ -100,11 +101,5 @@ const styles = StyleSheet.create({
   trendText: {
     fontSize: TYPOGRAPHY.sizes.xs,
     fontWeight: TYPOGRAPHY.weights.semibold,
-  },
-  trendUp: {
-    color: COLORS.success,
-  },
-  trendDown: {
-    color: COLORS.error,
   },
 });

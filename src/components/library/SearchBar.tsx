@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, TextInput, StyleSheet, TouchableOpacity, Text } from 'react-native';
-import { COLORS, SPACING, RADIUS, TYPOGRAPHY, SHADOWS } from '../../utils/theme';
+import { SPACING, RADIUS, TYPOGRAPHY, SHADOWS } from '../../utils/theme';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface SearchBarProps {
   value: string;
@@ -21,18 +22,20 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   onChangeText,
   placeholder = 'Rechercher un exercice...',
 }) => {
+  const { colors } = useTheme();
+
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.surface, borderColor: colors.border }]}>
       {/* Icône de recherche */}
       <Text style={styles.searchIcon}>🔍</Text>
 
       {/* Input */}
       <TextInput
-        style={styles.input}
+        style={[styles.input, { color: colors.text }]}
         value={value}
         onChangeText={onChangeText}
         placeholder={placeholder}
-        placeholderTextColor={COLORS.placeholder}
+        placeholderTextColor={colors.placeholder}
         autoCapitalize="none"
         autoCorrect={false}
         returnKeyType="search"
@@ -45,7 +48,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           onPress={() => onChangeText('')}
           hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
         >
-          <Text style={styles.clearIcon}>✕</Text>
+          <Text style={[styles.clearIcon, { color: colors.textTertiary }]}>✕</Text>
         </TouchableOpacity>
       )}
     </View>
@@ -56,12 +59,10 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: COLORS.surface,
     borderRadius: RADIUS.lg,
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.sm,
     borderWidth: 1,
-    borderColor: COLORS.border,
     ...SHADOWS.sm,
   },
   searchIcon: {
@@ -71,7 +72,6 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: TYPOGRAPHY.sizes.base,
-    color: COLORS.text,
     paddingVertical: SPACING.xs,
   },
   clearButton: {
@@ -79,6 +79,5 @@ const styles = StyleSheet.create({
   },
   clearIcon: {
     fontSize: 18,
-    color: COLORS.textTertiary,
   },
 });

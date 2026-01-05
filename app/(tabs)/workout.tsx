@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import Button from '../../src/components/Button';
 import { ModernHeader } from '../../src/components/shared/ModernHeader';
 import { DateSelector } from '../../src/components/workout/DateSelector';
@@ -9,9 +9,9 @@ import { WorkoutSummary } from '../../src/components/workout/WorkoutSummary';
 import { WORKOUT_MESSAGES } from '../../src/constants/messages';
 import { useDateNavigation } from '../../src/hooks/useDateNavigation';
 import { useWorkoutForm } from '../../src/hooks/useWorkoutForm';
+import { useTheme } from '../../src/contexts/ThemeContext';
 import StorageService from '../../src/services/StorageService';
 import { WorkoutEntry } from '../../src/types';
-import { COLORS } from '../../src/utils/theme';
 
 /**
  * Page principale de gestion des séances d'entraînement
@@ -26,6 +26,8 @@ import { COLORS } from '../../src/utils/theme';
  * - Voir un résumé statistique de la séance
  */
 export default function WorkoutPage() {
+  const { colors } = useTheme();
+
   // Gestion de la navigation de dates
   const dateNavigation = useDateNavigation();
 
@@ -65,7 +67,7 @@ export default function WorkoutPage() {
   }, [loadData]);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <ModernHeader title="Ma Séance" subtitle="Enregistrez vos exercices" icon="🏋️" />
 
       <ScrollView style={styles.scrollView}>
@@ -122,7 +124,6 @@ export default function WorkoutPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   scrollView: {
     flex: 1,

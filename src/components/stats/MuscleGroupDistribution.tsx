@@ -1,6 +1,7 @@
 import React from 'react';
+import { useTheme } from '../../contexts/ThemeContext';
 import { View, Text, StyleSheet } from 'react-native';
-import { COLORS, SPACING, RADIUS, SHADOWS, TYPOGRAPHY } from '../../utils/theme';
+import { SPACING, RADIUS, SHADOWS, TYPOGRAPHY } from '../../utils/theme';
 import { getMuscleGroupById } from '../../data/exercisesDatabase';
 
 interface MuscleGroupStat {
@@ -19,10 +20,12 @@ interface MuscleGroupDistributionProps {
 export const MuscleGroupDistribution: React.FC<MuscleGroupDistributionProps> = ({
   distribution,
 }) => {
+  const { colors } = useTheme();
+
   return (
     <View style={styles.container}>
-      <Text style={styles.sectionTitle}>Répartition par Groupe</Text>
-      <View style={styles.card}>
+      <Text style={[styles.sectionTitle, { color: colors.textSecondary }]}>Répartition par Groupe</Text>
+      <View style={[styles.card, { backgroundColor: colors.surface }]}>
         {distribution.map((stat) => {
           const group = getMuscleGroupById(stat.groupId);
           if (!group) return null;
@@ -31,10 +34,10 @@ export const MuscleGroupDistribution: React.FC<MuscleGroupDistributionProps> = (
             <View key={stat.groupId} style={styles.groupRow}>
               <View style={[styles.colorDot, { backgroundColor: group.color }]} />
               <View style={styles.groupInfo}>
-                <Text style={styles.groupName}>
+                <Text style={[styles.groupName, { color: colors.text }]}>
                   {group.icon} {group.name}
                 </Text>
-                <View style={styles.progressBarContainer}>
+                <View style={[styles.progressBarContainer, { backgroundColor: colors.divider }]}>
                   <View
                     style={[
                       styles.progressBar,
@@ -43,7 +46,7 @@ export const MuscleGroupDistribution: React.FC<MuscleGroupDistributionProps> = (
                   />
                 </View>
               </View>
-              <Text style={styles.percentage}>{stat.percentage.toFixed(0)}%</Text>
+              <Text style={[styles.percentage, { color: colors.textSecondary }]}>{stat.percentage.toFixed(0)}%</Text>
             </View>
           );
         })}
@@ -59,13 +62,11 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: TYPOGRAPHY.sizes.base,
     fontWeight: TYPOGRAPHY.weights.semibold,
-    color: COLORS.textSecondary,
     marginBottom: SPACING.md,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   card: {
-    backgroundColor: COLORS.surface,
     borderRadius: RADIUS.xl,
     padding: SPACING.md,
     ...SHADOWS.sm,
@@ -88,12 +89,10 @@ const styles = StyleSheet.create({
   groupName: {
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: TYPOGRAPHY.weights.semibold,
-    color: COLORS.text,
     marginBottom: SPACING.xxs,
   },
   progressBarContainer: {
     height: 6,
-    backgroundColor: COLORS.divider,
     borderRadius: RADIUS.full,
     overflow: 'hidden',
   },
@@ -104,7 +103,6 @@ const styles = StyleSheet.create({
   percentage: {
     fontSize: TYPOGRAPHY.sizes.sm,
     fontWeight: TYPOGRAPHY.weights.bold,
-    color: COLORS.textSecondary,
     minWidth: 40,
     textAlign: 'right',
   },

@@ -2,7 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import Button from '../Button';
-import { COLORS, SPACING } from '../../utils/theme';
+import { SPACING } from '../../utils/theme';
+import { useTheme } from '../../contexts/ThemeContext';
 import { MONTHS, generateDays, generateYears, formatDateForDisplay } from '../../constants/dates';
 import { WORKOUT_MESSAGES } from '../../constants/messages';
 
@@ -38,12 +39,13 @@ export const DateSelector: React.FC<DateSelectorProps> = ({
   onNextDay,
   onToday,
 }) => {
+  const { colors } = useTheme();
   const days = generateDays();
   const years = generateYears();
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>{WORKOUT_MESSAGES.LABELS.DATE_SECTION}</Text>
+    <View style={[styles.container, { backgroundColor: colors.surface, borderBottomColor: colors.border }]}>
+      <Text style={[styles.label, { color: colors.text }]}>{WORKOUT_MESSAGES.LABELS.DATE_SECTION}</Text>
 
       {/* Navigation rapide */}
       <View style={styles.quickNavigation}>
@@ -72,8 +74,8 @@ export const DateSelector: React.FC<DateSelectorProps> = ({
       {/* Pickers de date */}
       <View style={styles.pickersRow}>
         {/* Picker Jour */}
-        <View style={styles.pickerContainer}>
-          <Text style={styles.pickerLabel}>Jour</Text>
+        <View style={[styles.pickerContainer, { backgroundColor: colors.background }]}>
+          <Text style={[styles.pickerLabel, { color: colors.textSecondary }]}>Jour</Text>
           <Picker selectedValue={selectedDay} onValueChange={onDayChange} style={styles.picker}>
             {days.map((day) => (
               <Picker.Item
@@ -86,8 +88,8 @@ export const DateSelector: React.FC<DateSelectorProps> = ({
         </View>
 
         {/* Picker Mois */}
-        <View style={styles.pickerContainer}>
-          <Text style={styles.pickerLabel}>Mois</Text>
+        <View style={[styles.pickerContainer, { backgroundColor: colors.background }]}>
+          <Text style={[styles.pickerLabel, { color: colors.textSecondary }]}>Mois</Text>
           <Picker
             selectedValue={selectedMonth}
             onValueChange={onMonthChange}
@@ -100,8 +102,8 @@ export const DateSelector: React.FC<DateSelectorProps> = ({
         </View>
 
         {/* Picker Année */}
-        <View style={styles.pickerContainer}>
-          <Text style={styles.pickerLabel}>Année</Text>
+        <View style={[styles.pickerContainer, { backgroundColor: colors.background }]}>
+          <Text style={[styles.pickerLabel, { color: colors.textSecondary }]}>Année</Text>
           <Picker
             selectedValue={selectedYear}
             onValueChange={onYearChange}
@@ -115,8 +117,8 @@ export const DateSelector: React.FC<DateSelectorProps> = ({
       </View>
 
       {/* Affichage de la date sélectionnée */}
-      <View style={styles.datePreviewContainer}>
-        <Text style={styles.datePreview}>📅 {formatDateForDisplay(selectedDateString)}</Text>
+      <View style={[styles.datePreviewContainer, { backgroundColor: colors.background }]}>
+        <Text style={[styles.datePreview, { color: colors.primary }]}>📅 {formatDateForDisplay(selectedDateString)}</Text>
       </View>
     </View>
   );
@@ -125,14 +127,11 @@ export const DateSelector: React.FC<DateSelectorProps> = ({
 const styles = StyleSheet.create({
   container: {
     padding: SPACING.md,
-    backgroundColor: COLORS.surface,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.border,
   },
   label: {
     fontSize: 18,
     fontWeight: '600',
-    color: COLORS.text,
     marginBottom: SPACING.md,
     textAlign: 'center',
   },
@@ -153,13 +152,11 @@ const styles = StyleSheet.create({
   },
   pickerContainer: {
     flex: 1,
-    backgroundColor: COLORS.background,
     borderRadius: 8,
     overflow: 'hidden',
   },
   pickerLabel: {
     fontSize: 12,
-    color: COLORS.textSecondary,
     marginTop: 4,
     marginBottom: 2,
     textAlign: 'center',
@@ -169,13 +166,11 @@ const styles = StyleSheet.create({
     height: 50,
   },
   datePreviewContainer: {
-    backgroundColor: COLORS.background,
     borderRadius: 8,
     padding: SPACING.sm,
   },
   datePreview: {
     fontSize: 16,
-    color: COLORS.primary,
     textAlign: 'center',
     fontWeight: '600',
   },
